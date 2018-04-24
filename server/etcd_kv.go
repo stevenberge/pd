@@ -62,6 +62,7 @@ func (kv *etcdKVBase) Load(key string) (string, error) {
 	return string(resp.Kvs[0].Value), nil
 }
 
+//sgon: pd的kv store借用了etcd
 func (kv *etcdKVBase) LoadRange(key, endKey string, limit int) ([]string, error) {
 	key = path.Join(kv.rootPath, key)
 	endKey = path.Join(kv.rootPath, endKey)

@@ -130,6 +130,7 @@ func (kv *KV) LoadStores(stores *StoresInfo, rangeLimit int) error {
 	endKey := kv.storePath(math.MaxUint64)
 	for {
 		key := kv.storePath(nextID)
+		//sgon: 读取etcd，i.e. pd的kv store借用了etcd
 		res, err := kv.LoadRange(key, endKey, rangeLimit)
 		if err != nil {
 			return errors.Trace(err)
@@ -140,6 +141,7 @@ func (kv *KV) LoadStores(stores *StoresInfo, rangeLimit int) error {
 				return errors.Trace(err)
 			}
 			storeInfo := NewStoreInfo(store)
+			//sgon： 从kvstore拉取所有store的leader权重、region权重
 			leaderWeight, err := kv.loadFloatWithDefaultValue(kv.storeLeaderWeightPath(storeInfo.GetId()), 1.0)
 			if err != nil {
 				return errors.Trace(err)
@@ -195,6 +197,7 @@ func (kv *KV) LoadRegions(regions *RegionsInfo, rangeLimit int) error {
 
 	for {
 		key := kv.regionPath(nextID)
+		//sgon: kv是etcd
 		res, err := kv.LoadRange(key, endKey, rangeLimit)
 		if err != nil {
 			return errors.Trace(err)
